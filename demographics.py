@@ -31,19 +31,19 @@ with open('all_students_sep15.csv', 'r') as master:
         )
 
 # set up for combining info from two files
-fieldnames_in = ['last_name', 'first_name', 'email']
+fieldnames_in = ['email', 'first_name', 'last_name']
 # The output file will include demographics for each person on mailing list.
 # Copy the fields from the input file (mailing list) to the output file:
 fieldnames_out = fieldnames_in.copy()
 # Demographics to be added:
-fields = ['Status', 'Program', 'Field', 'Gender', 'Ethnicity']
+fields = ['Status', 'Program', 'Field', 'Gender', 'Ethnicity', 'ID']
 # Create list of fields for output file with mailing list and demographic
 # fields included:
 for item in fields:
     fieldnames_out.append(item)
 
-with open('master_oct_15.csv', 'r', encoding='utf-8', errors='ignore') as \
-        infile, open('demographics.csv', 'w') as outfile:
+with open('master_students_feb_16.csv', 'r', encoding='utf-8',
+          errors='ignore') as infile, open('demographics.csv', 'w') as outfile:
     reader = csv.DictReader(infile, fieldnames_in)
     next(reader, None)  # skip the header row
     writer = csv.DictWriter(outfile, fieldnames_out)
@@ -53,6 +53,8 @@ with open('master_oct_15.csv', 'r', encoding='utf-8', errors='ignore') as \
         email_acct = student.get('email')
         email_name = split_email(student.get('email'))[0]
         email_domain = split_email(student.get('email'))[1]
+        # find the matching student -- this will be in a list only because
+        # a list comprehension was the easiest way to write the match criteria
         student_info = [student for student in student_list if
                         student['ID'] == email_name.lower() or
                         student['Alt_Email'] == email_acct.lower()]
